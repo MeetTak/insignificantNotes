@@ -1,0 +1,43 @@
+{{define "main"}}
+<main class="home" id="main">
+  <section class="hero">
+    <p class="eyebrow">Personal knowledge base</p>
+    <h1>{{.Site.Title}}</h1>
+    {{with .Site.Tagline}}<p class="lede">{{.}}</p>{{end}}
+    <button class="search-hero" type="button" data-open-search>
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Search {{.Stats.Notes}} notes</span><kbd>/</kbd>
+    </button>
+    <ul class="stats">
+      <li><b>{{.Stats.Notes}}</b> notes</li>
+      <li><b>{{.Stats.Sections}}</b> sections</li>
+      {{if not .Stats.Updated.IsZero}}<li>updated <b>{{date .Stats.Updated}}</b></li>{{end}}
+    </ul>
+  </section>
+
+  <section class="index" aria-label="All notes">
+    {{range .Sections}}
+    <article class="card">
+      <header>
+        <h2><a href="{{$.Root}}{{.Slug}}/index.html">{{.Title}}</a></h2>
+        <span class="count">{{len .Notes}}</span>
+      </header>
+      {{with .Description}}<p class="card-desc">{{.}}</p>{{end}}
+      {{range .Groups}}
+        {{if .Name}}<h3>{{.Name}}</h3>{{end}}
+        <ol>{{range .Notes}}<li><a href="{{$.Root}}{{.URL}}">{{.Title}}</a></li>{{end}}</ol>
+      {{end}}
+    </article>
+    {{end}}
+  </section>
+
+  {{if .Recent}}
+  <section class="recent">
+    <h2>Recently updated</h2>
+    <ul>
+      {{range .Recent}}<li><a href="{{$.Root}}{{.URL}}"><span class="t">{{.Title}}</span><span class="m">{{.SectionTitle}}{{with .Group}} / {{.}}{{end}}</span><time datetime="{{isodate .Modified}}">{{date .Modified}}</time></a></li>{{end}}
+    </ul>
+  </section>
+  {{end}}
+</main>
+{{end}}

@@ -3,8 +3,8 @@ CLAUDE.md
 .claude/
 
 # build output
-bin/
-site/
+/bin/
+/site/
 
 # OS / editor noise
 .DS_Store

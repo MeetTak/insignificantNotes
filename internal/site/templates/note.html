@@ -1,0 +1,29 @@
+{{define "main"}}
+<div class="shell{{if not .Note.TOC}} no-toc{{end}}">
+  {{template "sidebar" .}}
+  <main class="content" id="main">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="{{.Root}}index.html">Home</a><span>/</span>
+      <a href="{{.Root}}{{.Section.Slug}}/index.html">{{.Section.Title}}</a>
+      {{with .Note.Group}}<span>/</span><span>{{.}}</span>{{end}}
+    </nav>
+    <article class="prose">
+      <h1 class="title">{{.Note.Title}}</h1>
+      <p class="meta">
+        {{if not .Note.Modified.IsZero}}Updated <time datetime="{{isodate .Note.Modified}}">{{date .Note.Modified}}</time> · {{end}}{{.Note.ReadMins}} min read
+      </p>
+      {{.Note.HTML}}
+    </article>
+    <nav class="pager" aria-label="Previous and next note">
+      {{with .Note.Prev}}<a class="prev" href="{{$.Root}}{{.URL}}"><small>← Previous</small><span>{{.Title}}</span></a>{{else}}<span></span>{{end}}
+      {{with .Note.Next}}<a class="next" href="{{$.Root}}{{.URL}}"><small>Next →</small><span>{{.Title}}</span></a>{{end}}
+    </nav>
+  </main>
+  {{if .Note.TOC}}
+  <aside class="toc" aria-label="On this page">
+    <p class="toc-title">On this page</p>
+    <ul>{{range .Note.TOC}}<li class="l{{.Level}}"><a href="#{{.ID}}">{{.Text}}</a></li>{{end}}</ul>
+  </aside>
+  {{end}}
+</div>
+{{end}}

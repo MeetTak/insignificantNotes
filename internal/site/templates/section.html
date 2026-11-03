@@ -1,0 +1,26 @@
+{{define "main"}}
+<div class="shell no-toc">
+  {{template "sidebar" .}}
+  <main class="content" id="main">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="{{.Root}}index.html">Home</a><span>/</span><span>{{.Section.Title}}</span></nav>
+    <header class="section-head">
+      <h1>{{.Section.Title}}</h1>
+      {{with .Section.Description}}<p class="lede">{{.}}</p>{{end}}
+      <p class="meta">{{len .Section.Notes}} notes{{if not .Section.Updated.IsZero}} · updated {{date .Section.Updated}}{{end}}</p>
+    </header>
+    {{with .Section.Intro}}<div class="prose intro">{{.}}</div>{{end}}
+    {{range .Section.Groups}}
+    <section class="group">
+      {{if .Name}}<h2>{{.Name}}</h2>{{end}}
+      <ul class="note-list">
+        {{range .Notes}}<li><a href="{{$.Root}}{{.URL}}">
+          <span class="t">{{.Title}}</span>
+          {{with .Excerpt}}<span class="x">{{.}}</span>{{end}}
+          <span class="d"><time datetime="{{isodate .Modified}}">{{date .Modified}}</time> · {{.ReadMins}} min</span>
+        </a></li>{{end}}
+      </ul>
+    </section>
+    {{end}}
+  </main>
+</div>
+{{end}}
