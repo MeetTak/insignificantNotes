@@ -1,0 +1,44 @@
+{
+  "site": {
+    "title": "insignificantNotes",
+    "tagline": "Things I learn, written down as I go. Synced straight from Apple Notes.",
+    "author": "MeetTak",
+    "repo_url": "",
+    "base_url": "/insignificantNotes/",
+    "timezone": "Asia/Kolkata"
+  },
+  "source": {
+    "account": "iCloud",
+    "folders": ["aws", "cloud", "Java"],
+    "exclude_folders": ["other", "others", "notes", "acad"],
+    "skip_tags": ["#private", "#nopublish"],
+    "image_max_width": 1600
+  },
+  "sections": {
+    "aws": {
+      "title": "AWS",
+      "description": "AWS course modules, exam domains, practice sets and sandbox walkthroughs.",
+      "order": 1
+    },
+    "cloud": {
+      "title": "Cloud & DevOps",
+      "description": "Docker, Kubernetes, networking, VM setup and Nexus artifact repositories.",
+      "order": 2
+    },
+    "java": {
+      "title": "Java",
+      "description": "Core Java, OOP, threads and Spring Boot.",
+      "order": 3
+    }
+  },
+  "paths": {
+    "content": "content",
+    "output": "site"
+  },
+  "scan": {
+    "allowlist": ".secretsallow",
+    "ignore_paths": ["**/*_test.go", "**/testdata/**", "site/**", "bin/**", "go.sum"],
+    "keyword_paths": ["content/**"],
+    "fail_on_warnings": false
+  }
+}

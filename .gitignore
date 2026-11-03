@@ -1,0 +1,13 @@
+# Claude Code project instructions are local-only
+CLAUDE.md
+.claude/
+
+# build output
+bin/
+site/
+
+# OS / editor noise
+.DS_Store
+*.swp
+*.log
+.notesync-cache.json

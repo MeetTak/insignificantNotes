@@ -1,0 +1,62 @@
+# Check & deploy: nothing reaches GitHub Pages unless vet, every test
+# (including the content secret gate) and the secret scan pass.
+name: Check & deploy Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Vet
+        run: |
+          go vet ./...
+          test -z "$(gofmt -l .)" || (gofmt -l . && exit 1)
+
+      - name: Tests (unit + content gate)
+        run: go test ./... -v 2>&1 | tee test.log; exit ${PIPESTATUS[0]}
+
+      - name: Build notesync
+        run: go build -o bin/notesync ./cmd/notesync
+
+      - name: Secret scan (HIGH findings fail the deploy)
+        run: ./bin/notesync scan --tracked --format github
+
+      - name: Build site
+        run: ./bin/notesync build
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: check
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
